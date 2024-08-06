@@ -444,6 +444,11 @@ class Validator
 
     validate(string)
     {
+        return new ValidationResult(string);
+    }
+
+    _on_validate(string)
+    {
         var data;
         try {
             data = JSON.parse(string);
@@ -483,6 +488,21 @@ class Validator
             name: error.parentSchema?._docs_name ?? "Value",
             docs: error.parentSchema?._docs,
         };
+    }
+}
+
+
+class ValidationResult
+{
+    constructor(errors)
+    {
+        this.errors = errors;
+        this.success = !errors.some(e => e.type == "error");
+    }
+
+    only_errors()
+    {
+        return this.errors.filter(e => e.type == "error");
     }
 }
 

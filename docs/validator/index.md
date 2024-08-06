@@ -199,13 +199,13 @@ function show_errors(errors)
 
 function validate_string(value)
 {
-    var errors = validator.validate(value);
-    if ( !errors.some(e => e.type == "error") )
-        errors.unshift({
+    var result = validator.validate(value);
+    if ( result.success )
+        result.errors.unshift({
             type: "success",
             message: "Validation successful with no errors"
         });
-    show_errors(errors);
+    show_errors(result.errors);
 }
 
 function on_file_input(ev)

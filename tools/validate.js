@@ -64,9 +64,8 @@ if ( json_file === null )
 const data = fs.readFileSync(json_file, "utf8");
 const schema = JSON.parse(fs.readFileSync(schema_path, "utf8"));
 const validator = new Validator(ajv2020.Ajv2020, schema);
-var errors = validator.validate(data);
-if ( !show_warnings )
-    errors = errors.filter(e => e.type == "error");
+const result = validator.validate(data);
+const errors = show_warnings ? result.errors : result.only_errors();
 
 
 if ( format == "json" )
@@ -80,5 +79,5 @@ else
 }
 
 
-if ( errors.find(e => e.type == "error") )
+if ( !result.success )
     process.exit(1);
