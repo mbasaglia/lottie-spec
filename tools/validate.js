@@ -15,12 +15,19 @@ function show_help()
 }
 
 var schema_path = path.resolve(__dirname, "../docs/lottie.schema.json");
-var json_file = null
+var json_file = null;
+var show_warnings = false;
+var format = "json";
+
 var args = {
     "--schema": [1, "Path to the schema", (arg) => { schema_path = arg; }],
     "--help": [0, "Shows help", () => show_help()],
+    "--warn": [0, "Show warnings", () => { show_warnings = true; }],
+    "--format": [1, "Output format", (arg) => { format = arg; }],
 }
 args["-h"] = args["--help"];
+args["-w"] = args["--warn"];
+args["-f"] = args["--format"];
 
 
 
@@ -57,7 +64,21 @@ if ( json_file === null )
 const data = fs.readFileSync(json_file, "utf8");
 const schema = JSON.parse(fs.readFileSync(schema_path, "utf8"));
 const validator = new Validator(ajv2020.Ajv2020, schema);
-const errors = validator.validate(data);
-console.log(JSON.stringify(errors, null, 4));
+var errors = validator.validate(data);
+if ( !show_warnings )
+    errors = errors.filter(e => e.type == "error");
+
+
+if ( format == "json" )
+{
+    console.log(JSON.stringify(errors, null, 4));
+}
+else
+{
+    for ( let err of errors )
+        console.log(err.path, ":", err.type, ":", err.message);
+}
+
+
 if ( errors.find(e => e.type == "error") )
     process.exit(1);
