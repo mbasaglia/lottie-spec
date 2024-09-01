@@ -2,7 +2,9 @@
   {
     "version": "test-8",
     "title": "test-8",
-    "aliases": []
+    "aliases": [
+      "latest"
+    ]
   },
   {
     "version": "test-7",
@@ -32,8 +34,6 @@
   {
     "version": "1.0",
     "title": "1.0",
-    "aliases": [
-      "latest"
-    ]
+    "aliases": []
   }
 ]
